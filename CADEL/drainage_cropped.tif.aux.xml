@@ -1,0 +1,10 @@
+<PAMDataset>
+  <PAMRasterBand band="1">
+    <Description>drainage</Description>
+    <Metadata>
+      <MDI key="COLOR_TABLE_RULES_COUNT">2</MDI>
+      <MDI key="COLOR_TABLE_RULE_RGB_0">-8.000000e+00 0.000000e+00 0 0 0 255 255 255</MDI>
+      <MDI key="COLOR_TABLE_RULE_RGB_1">0.000000e+00 8.000000e+00 255 255 255 0 0 0</MDI>
+    </Metadata>
+  </PAMRasterBand>
+</PAMDataset>
