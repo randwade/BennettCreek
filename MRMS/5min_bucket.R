@@ -6,6 +6,7 @@ library(purrr)
 library(readr)
 
 # Load the coordinates
+setwd("~/R/Bennett/MRMS/combine")
 coords <- read_csv('bucket_coords.csv')
 
 # Define a list of your file paths
@@ -49,7 +50,7 @@ process_file <- function(file) {
   # Create new column combining longitude and latitude
   data_5min <- data_5min %>% 
     mutate(location = paste(longitude, latitude, sep = "_")) %>%
-    select(-c(latitude, longitude))
+    dplyr::select(-c(latitude, longitude))
   
   return(data_5min)
 }
@@ -63,3 +64,34 @@ print(head(all_data))
 # Pivot data from long to wide format and replace NA with 0
 wide_data <- all_data %>%
   pivot_wider(names_from = location, values_from = P_mm, values_fill = 0)
+
+write.csv(wide_data, "new_bucket_5min.csv")
+
+
+##########################
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage.
+
+# Load the required library
+library(tidyverse)
+library(data.table)
+
+# Read in your second data frame
+all_data <- read_csv("new_MRMS_5min.csv")
+all_data_2 <- read_csv("new_bucket_5min.csv")
+
+
+# Convert the dataframes to a long format
+df1_long <- pivot_longer(all_data, cols = -datetime, names_to = "location", values_to = "P_mm")
+df2_long <- pivot_longer(all_data_2, cols = -datetime, names_to = "location", values_to = "P_mm")
+
+# Merge the long format dataframes
+merged_df_long <- bind_rows(df1_long, df2_long)
+
+# Convert back to a wide format
+# Convert back to a wide format, taking the sum of any duplicate values
+# Convert back to a wide format, taking the sum of any duplicate values
+merged_df <- pivot_wider(merged_df_long, names_from = location, values_from = "P_mm", values_fn = list(P_mm = ~sum(.x, na.rm = TRUE)))
+
+# Write the merged dataframe to a new CSV file
+write.csv(merged_df, "merged_5min.csv")
