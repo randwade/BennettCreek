@@ -128,9 +128,8 @@ for (var in var_list2) {
   
   # Convert list columns to character and replace NA values with -9999
   temp_df <- temp_df %>%
-    mutate(across(starts_with("-"), ~replace_na(., "-9999")))%>%
-    mutate(across(starts_with("-"), ~sapply(., toString))) 
-    
+    mutate(across(starts_with("-"), ~replace_na(., -9999))) %>%
+    mutate(across(starts_with("-"), ~as.character(.)))
   
   # Assign the dataframe to a variable in global R environment
   assign(var, temp_df, envir = .GlobalEnv)
